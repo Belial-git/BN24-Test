@@ -1,0 +1,28 @@
+version: '3.8'
+
+name: "bn24-test"
+
+services:
+    php:
+        container_name: "php"
+        build: ./docker/php
+        working_dir: /var/www/html
+        volumes:
+            - ./:/var/www/html:cached
+            - ./docker/php/php.ini:/usr/local/etc/php/conf.d/40-custom.ini
+        ports:
+            - "127.0.0.1:8000:8000"
+        restart: always
+
+    postgres:
+        container_name: "postgres"
+        image: postgres:16.0
+        volumes:
+            - ./docker/postgres/data:/var/lib/postgresql/data
+        ports:
+            - "127.0.0.1:5432:5432"
+        environment:
+          - POSTGRES_DB=test
+          - POSTGRES_USER=test
+          - POSTGRES_PASSWORD=test
+        restart: always
