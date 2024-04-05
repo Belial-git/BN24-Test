@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Api;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserBasket extends Model
+class BasketItem extends Model
 {
     use HasFactory;
+
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -22,7 +23,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => ['required','unique:users,email'],
+            'role' => 'required',
+            'password' => 'required',
+        ]);
+
+        return User::create(['password'=>Hash::make($request->password), ...$request->all()]);
     }
 
     /**
@@ -38,7 +46,9 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::query()->find($id);
+        $user->update($request->all());
+        return $user;
     }
 
     /**
@@ -46,6 +56,6 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+       return User::destroy($id);
     }
 }

@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProductListResource;
-use App\Models\ProductList;
+use App\Http\Resources\Api\ProductResource;
+use App\Models\Api\Product;
 use Illuminate\Http\Request;
 
-class ProductListController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return ProductListResource::collection(ProductList::all());
+        return ProductResource::collection(Product::all());
     }
 
     /**
@@ -22,7 +22,12 @@ class ProductListController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'=>'required',
+            'count'=>'required',
+            'price'=>'required',
+        ]);
+        return Product::create($request->all());
     }
 
     /**
@@ -30,7 +35,7 @@ class ProductListController extends Controller
      */
     public function show(string $id)
     {
-        return new ProductListResource(ProductList::query()->findOrFail($id));
+        return new ProductResource(Product::query()->findOrFail($id));
     }
 
     /**
@@ -38,7 +43,9 @@ class ProductListController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $list = Product::query()->find($id);
+        $list->update($request->all());
+        return $list;
     }
 
     /**
@@ -46,6 +53,6 @@ class ProductListController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return Product::destroy($id);
     }
 }

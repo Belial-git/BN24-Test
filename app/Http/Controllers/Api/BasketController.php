@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserBasketResource;
-use App\Models\UserBasket;
+use app\Http\Resources\Api\BasketResource;
+use app\Models\Api\Basket;
+use App\Models\Api\BasketItem;
 use Illuminate\Http\Request;
 
-class UserBasketController extends Controller
+class BasketController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return UserBasketResource::collection(UserBasket::all());
+        return BasketResource::collection(Basket::all());
     }
 
     /**
@@ -22,7 +23,12 @@ class UserBasketController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'basket_id' => 'required',
+            'product_id' => 'required',
+            'price' => 'required'
+        ]);
+        return BasketItem::create($request->all());
     }
 
     /**
@@ -30,7 +36,7 @@ class UserBasketController extends Controller
      */
     public function show(string $id)
     {
-        return new UserBasketResource(UserBasket::query()->findOrFail($id));
+        return new BasketResource(Basket::query()->findOrFail($id));
     }
 
     /**
@@ -38,7 +44,9 @@ class UserBasketController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $basket = Basket::query()->find($id);
+        $basket->update($request->all());
+        return $basket;
     }
 
     /**
@@ -46,6 +54,6 @@ class UserBasketController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return BasketItem::destroy($id);
     }
 }

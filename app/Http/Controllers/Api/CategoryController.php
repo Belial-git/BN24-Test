@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CategoryResource;
-use App\Models\ProductCategory;
+use app\Http\Resources\Api\CategoryResource;
+use app\Models\Api\ProductCategory;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -22,7 +22,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'category'=>'required',
+        ]);
+        return ProductCategory::create($request->all());
     }
 
     /**
@@ -38,7 +41,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = ProductCategory::query()->find($id);
+        $product->update($request->all());
+        return $product;
     }
 
     /**
@@ -46,6 +51,6 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return ProductCategory::destroy($id);
     }
 }
